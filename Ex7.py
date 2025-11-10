@@ -31,9 +31,3 @@ for method in methods:
         elif method == "DELETE":
             response4 = requests.delete("https://playground.learnqa.ru/api/compare_query_type", data={"method": params_method})
             check(method, params_method, response4.text)
-
-
-
-
-
-
