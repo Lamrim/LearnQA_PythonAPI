@@ -1,5 +1,8 @@
 import requests
 
+from lib.logger import Logger
+
+
 class MyRequests:
     @staticmethod
     def get(url: str, data: dict=None, headers: dict=None, cookies: dict=None):
@@ -20,20 +23,25 @@ class MyRequests:
     @staticmethod
     def _send(url: str, data: dict, headers: dict, cookies: dict, method: str):
 
-        uri = f"https://playground.learnqa.ru/api{url}"
+        url = f"https://playground.learnqa.ru/api{url}"
 
         if headers is None:
             headers = {}
         if cookies is None:
             cookies = {}
+
+        Logger.add_request(url, data, headers, cookies, method)
+
         if method == "GET":
-            response = requests.get(uri, params=data, headers=headers, cookies=cookies)
+            response = requests.get(url, params=data, headers=headers, cookies=cookies)
         elif method == "POST":
-            response = requests.post(uri, data=data, headers=headers, cookies=cookies)
+            response = requests.post(url, data=data, headers=headers, cookies=cookies)
         elif method == "PUT":
-            response = requests.put(uri, data=data, headers=headers, cookies=cookies)
+            response = requests.put(url, data=data, headers=headers, cookies=cookies)
         elif method == "DELETE":
-            response = requests.delete(uri, data=data, headers=headers, cookies=cookies)
+            response = requests.delete(url, data=data, headers=headers, cookies=cookies)
         else: raise Exception(f"Wrong method: {method}")
+
+        Logger.add_response(response)
 
         return response
