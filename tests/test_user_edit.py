@@ -1,8 +1,11 @@
+import allure
+
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
 
-
+@allure.feature("User")
+@allure.story("Edit user")
 class TestUserEdit(BaseCase):
 
     def edit_user(self, user_id, auth_sid=None, token=None, data=None):
@@ -11,6 +14,8 @@ class TestUserEdit(BaseCase):
 
         return MyRequests.put(f"/user/{user_id}", headers=headers, cookies=cookies, data=data)
 
+    @allure.description("Successful edit new user")
+    @allure.tag("positive")
     def test_edit_just_created_user(self):
         user_id, auth_sid, token = self.create_and_login_user()
 
@@ -26,6 +31,8 @@ class TestUserEdit(BaseCase):
 
         Assertions.assert_json_value_by_name(response_get, "firstName", new_name, "Wrong name")
 
+    @allure.description("Try to edit user without authorization")
+    @allure.tag("negative")
     def test_edit_user_without_authorization(self):
         user_id, auth_sid, token = self.create_and_login_user()
         new_name = "New name"
@@ -34,6 +41,8 @@ class TestUserEdit(BaseCase):
 
         Assertions.assert_status_code(response, 400)
 
+    @allure.description("Try to edit user as other user")
+    @allure.tag("negative")
     def test_edit_as_other_user(self):
         user_id1, auth_sid1, token1 = self.create_and_login_user()
 
@@ -45,7 +54,8 @@ class TestUserEdit(BaseCase):
 
         Assertions.assert_status_code(response_edit, 400)
 
-
+    @allure.description("Try to edit user with invalid email")
+    @allure.tag("negative")
     def test_edit_with_invalid_email(self):
         user_id, auth_sid, token = self.create_and_login_user()
         invalid_email = "invalidemail.com"
@@ -53,6 +63,8 @@ class TestUserEdit(BaseCase):
 
         Assertions.assert_status_code(response, 400)
 
+    @allure.description("Try to edit user with short name")
+    @allure.tag("negative")
     def test_edit_with_short_name(self):
         user_id, auth_sid, token = self.create_and_login_user()
         short_name = "M"

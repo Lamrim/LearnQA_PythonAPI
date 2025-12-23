@@ -4,8 +4,8 @@ from lib.assertions import Assertions
 from lib.my_requests import MyRequests
 import allure
 
-@allure.epic("Authorization tests")
-@allure.feature("Authorization tests")
+@allure.feature("User")
+@allure.story("Authorization")
 class TestUserAuth(BaseCase):
     exclude_params = [
         ("no_cookie"),
@@ -25,6 +25,7 @@ class TestUserAuth(BaseCase):
         self.user_id = self.get_json_value(response1, "user_id")
 
     @allure.description("Successful authorization test")
+    @allure.tag("positive")
     def test_user_auth(self):
         response2 = MyRequests.get("/user/auth",
                                    headers={"x-csrf-token":self.token},
@@ -37,6 +38,7 @@ class TestUserAuth(BaseCase):
             "user_id_from_check != user_id")
 
     @allure.description("Authorization test with no cookie or token")
+    @allure.tag("negative")
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth_check(self, condition):
 

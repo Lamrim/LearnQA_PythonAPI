@@ -1,9 +1,14 @@
+import allure
+
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
 
-
+@allure.feature("User")
+@allure.story("Get user")
 class TestUserGet(BaseCase):
+    @allure.description("Successful get user")
+    @allure.tag("positive")
     def test_get_user_details_not_auth(self):
         response = MyRequests.get("/user/2")
 
@@ -12,6 +17,8 @@ class TestUserGet(BaseCase):
         Assertions.assert_json_has_not_key(response, "firstName")
         Assertions.assert_json_has_not_key(response, "lastName")
 
+    @allure.description("Get user details as same user")
+    @allure.tag("positive")
     def test_get_user_details_auth_as_same_user(self):
         data = {
             'email': 'vinkotov@example.com',
@@ -30,6 +37,8 @@ class TestUserGet(BaseCase):
         expected_fields = ["username", "email", "firstName", "lastName"]
         Assertions.assert_json_has_keys(response2, expected_fields)
 
+    @allure.description("Get user details as other user")
+    @allure.tag("negative")
     def test_get_user_details_auth_as_different_user(self):
         login_data = {
             'email': 'vinkotov@example.com',
