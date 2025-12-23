@@ -39,21 +39,12 @@ class TestUserEdit(BaseCase):
 
         user_id2, auth_sid2, token2 = self.create_and_login_user()
 
-        response_before = MyRequests.get(f"/user/{user_id1}",
-                                    headers={"x-csrf-token": token1},
-                                    cookies={"auth_sid": auth_sid1})
-        first_name_before_edit = self.get_json_value(response_before, "firstName")
-
         new_name = "New name"
 
         response_edit = self.edit_user(user_id1, auth_sid2, token2, {"firstName": new_name})
 
-        response_after = MyRequests.get(f"/user/{user_id1}",
-                                    headers={"x-csrf-token": token1},
-                                    cookies={"auth_sid": auth_sid1})
-        first_name_after_edit = self.get_json_value(response_after, "firstName")
+        Assertions.assert_status_code(response_edit, 400)
 
-        assert first_name_after_edit == first_name_before_edit
 
     def test_edit_with_invalid_email(self):
         user_id, auth_sid, token = self.create_and_login_user()

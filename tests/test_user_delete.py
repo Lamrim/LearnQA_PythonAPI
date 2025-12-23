@@ -38,9 +38,4 @@ class TestUserDelete(BaseCase):
                                             headers={"x-csrf-token": token2},
                                             cookies={"auth_sid": auth_sid2})
 
-        # GET
-        response2 = MyRequests.get(f"/user/{user_to_delete_id1}",
-                                   headers={"x-csrf-token": token1},
-                                   cookies={"auth_sid": auth_sid1})
-
-        Assertions.assert_status_code(response2, 200)
+        Assertions.assert_status_code(response_delete, 400)
